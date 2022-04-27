@@ -1,0 +1,26 @@
+{
+	"name": "Akseleran Plus",
+	"description": "Akseleran supercharged.",
+	"version": "0.0.1",
+	"manifest_version": 3,
+	"icons": {
+		"32": "icon32.png",
+		"128": "icon128.png",
+		"256": "icon256.png",
+		"512": "icon512.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://*.akseleran.co.id/*"],
+			"run_at": "document_end",
+			"js": ["./public/index.js"],
+			"css": ["index.css"]
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["index.css"],
+			"matches": ["<all_urls>"]
+		}
+	]
+}
