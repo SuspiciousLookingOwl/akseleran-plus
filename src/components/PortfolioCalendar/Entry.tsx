@@ -4,13 +4,19 @@ import { Campaign } from "../../api/getPortfolio";
 
 type EntryListProps = {
 	campaign: Campaign;
+	active: boolean;
 };
 
 const EntryList: Component<EntryListProps> = (props) => {
 	return (
 		<div>
 			<a href={`https://www.akseleran.co.id/portofolio/${props.campaign.campaignUuid}`}>
-				<div class="text-white text-right bg-primary rounded px-[6px] py-0.5 w-full">
+				<div
+					class={classNames([
+						"text-white text-right rounded px-[6px] py-0.5 w-full",
+						{ "bg-primary": props.active, "bg-primary-light": !props.active },
+					])}
+				>
 					Rp {props.campaign.investmentAmount.toLocaleString()}
 				</div>
 			</a>
@@ -26,6 +32,7 @@ export type IEntry = {
 
 type Props = {
 	entry: IEntry;
+	active: boolean;
 };
 
 export const Entry: Component<Props> = (props) => {
@@ -43,16 +50,18 @@ export const Entry: Component<Props> = (props) => {
 			])}
 		>
 			<div class="flex flex-row justify-between items-center">
-				<div>{props.entry.date.getDate()}</div>
+				<div class={classNames({ "text-neutral-300": !props.active })}>{props.entry.date.getDate()}</div>
 				{props.entry.amount && (
-					<div class="font-semibold text-lg">Rp {props.entry.amount.toLocaleString()}</div>
+					<div class={classNames(["font-semibold text-lg"], { "text-neutral-400": !props.active })}>
+						Rp {props.entry.amount.toLocaleString()}
+					</div>
 				)}
 			</div>
 
 			{props.entry?.campaigns && (
 				<div class="mt-1 overflow-y-auto ltr space-y-1 pr-1">
 					<For each={props.entry.campaigns.sort((a, b) => b.investmentAmount - a.investmentAmount)}>
-						{(item) => <EntryList campaign={item} />}
+						{(item) => <EntryList campaign={item} active={props.active} />}
 					</For>
 				</div>
 			)}

@@ -41,7 +41,6 @@ export const PortfolioCalendar = () => {
 	//#region memos
 	const items = createMemo(() => data()?.data || [], []);
 	const firstDay = createMemo(() => new Date(year(), month(), 1).getDay());
-	const lastDate = createMemo(() => new Date(year(), month() + 1, 0).getDate());
 	const previousMonth = createMemo(() => new Date(year(), month() - 1));
 	const nextMonth = createMemo(() => new Date(year(), month() + 1));
 
@@ -64,15 +63,10 @@ export const PortfolioCalendar = () => {
 
 		return [...Array(7 * 5)].map((_, i) => {
 			const date = new Date(year(), month(), i - firstDay() + 1);
-			if (i >= firstDay() && i < firstDay() + lastDate()) {
-				const item = grouped.find(
-					(i) =>
-						new Date(i.date).getDate() === date.getDate() && new Date(i.date).getMonth() === date.getMonth()
-				);
-				return { date, amount: item?.amount, campaigns: item?.items };
-			} else {
-				return { date };
-			}
+			const item = grouped.find(
+				(i) => new Date(i.date).getDate() === date.getDate() && new Date(i.date).getMonth() === date.getMonth()
+			);
+			return { date, amount: item?.amount, campaigns: item?.items };
 		});
 	});
 	//#endregion
@@ -139,7 +133,9 @@ export const PortfolioCalendar = () => {
 						</div>
 
 						<div class="min-w-[1024px] w-full grid grid-cols-7">
-							<For each={entries()}>{(entry) => <Entry entry={entry}></Entry>}</For>
+							<For each={entries()}>
+								{(entry) => <Entry entry={entry} active={entry.date.getMonth() === month()}></Entry>}
+							</For>
 						</div>
 					</div>
 				</div>
