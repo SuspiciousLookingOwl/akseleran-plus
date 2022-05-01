@@ -1,9 +1,10 @@
 import { Accessor, createMemo, createResource, createSignal, For, Show } from "solid-js";
 import { Campaign, getPortfolio } from "../../api/getPortfolio";
+import { isDateEqual } from "../../utils";
 import { Entry, IEntry } from "./Entry";
 
 type GroupedData = {
-	date: string;
+	date: Date;
 	amount: number;
 	items: Campaign[];
 };
@@ -47,25 +48,20 @@ export const PortfolioCalendar = () => {
 	const entries: Accessor<IEntry[]> = createMemo(() => {
 		let grouped: GroupedData[] = [];
 		for (const d of items()) {
-			const date = d.nextPayoutDate.toISOString().split("T")[0];
-			const index = grouped.findIndex((d) => d.date === date);
+			const index = grouped.findIndex((g) => isDateEqual(g.date, d.nextPayoutDate));
 
-			if (index < 0) grouped.push({ date, amount: d.totalOutstanding, items: [] });
+			if (index < 0) grouped.push({ date: d.nextPayoutDate, amount: d.totalOutstanding, items: [] });
 			else grouped[index].amount += d.totalOutstanding;
-
-			grouped.sort((a, b) => b.date.localeCompare(a.date));
 		}
 
 		grouped = grouped.map((g) => {
-			g.items = items().filter((d) => d.nextPayoutDate.toISOString().split("T")[0] === g.date);
+			g.items = items().filter((d) => isDateEqual(d.nextPayoutDate, g.date));
 			return g;
 		});
 
 		return [...Array(7 * 5)].map((_, i) => {
 			const date = new Date(year(), month(), i - firstDay() + 1);
-			const item = grouped.find(
-				(i) => new Date(i.date).toISOString().split("T")[0] === date.toISOString().split("T")[0]
-			);
+			const item = grouped.find((i) => isDateEqual(i.date, date));
 			return { date, amount: item?.amount, campaigns: item?.items };
 		});
 	});
