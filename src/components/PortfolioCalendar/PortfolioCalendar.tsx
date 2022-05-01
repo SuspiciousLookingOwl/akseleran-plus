@@ -100,7 +100,8 @@ export const PortfolioCalendar = () => {
 			<Show when={isCalendarShown()}>
 				<div class="w-full mb-12 p-4 shadow-md shadow-neutral-300 border border-neutral-300 rounded">
 					<div class="grid grid-cols-3 items-end justify-between space-x-4">
-						{previousMonth().getMonth() >= today.getMonth() ? (
+						{previousMonth().getMonth() >= today.getMonth() ||
+						previousMonth().getFullYear() > today.getFullYear() ? (
 							<div
 								class="flex flex-row space-x-2 cursor-pointer px-2 select-none items-center justify-start"
 								onClick={() => updateMonth(false)}
