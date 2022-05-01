@@ -44,8 +44,7 @@ export const Entry: Component<Props> = (props) => {
 				"flex flex-col p-1 border min-h-[64px] max-h-[168px] -ml-[1px] -mt-[1px]",
 				{
 					"border-2 border-primary-dark z-10 rounded":
-						props.entry?.date.getDate() === today.getDate() &&
-						props.entry?.date.getMonth() === today.getMonth(),
+						props.entry?.date.toISOString().split("T")[0] === today.toISOString().split("T")[0],
 				},
 			])}
 		>
