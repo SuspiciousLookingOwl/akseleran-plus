@@ -64,7 +64,7 @@ export const PortfolioCalendar = () => {
 		return [...Array(7 * 5)].map((_, i) => {
 			const date = new Date(year(), month(), i - firstDay() + 1);
 			const item = grouped.find(
-				(i) => new Date(i.date).getDate() === date.getDate() && new Date(i.date).getMonth() === date.getMonth()
+				(i) => new Date(i.date).toISOString().split("T")[0] === date.toISOString().split("T")[0]
 			);
 			return { date, amount: item?.amount, campaigns: item?.items };
 		});
