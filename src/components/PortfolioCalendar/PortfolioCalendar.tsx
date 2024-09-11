@@ -36,11 +36,11 @@ export const PortfolioCalendar = () => {
 	//#endregion
 
 	//#region resources
-	const [data] = createResource(Number.MAX_SAFE_INTEGER, getPortfolio);
+	const [data] = createResource(10000, getPortfolio, { initialValue: [] });
 	//#endregion
 
 	//#region memos
-	const items = createMemo(() => data()?.data || [], []);
+	const items = createMemo(() => data(), []);
 	const firstDay = createMemo(() => new Date(year(), month(), 1).getDay());
 	const previousMonth = createMemo(() => new Date(year(), month() - 1));
 	const nextMonth = createMemo(() => new Date(year(), month() + 1));
@@ -88,36 +88,33 @@ export const PortfolioCalendar = () => {
 	return (
 		<>
 			<div
-				class="bg-primary-dark py-3 w-full cursor-pointer text-center text-white text-xl mb-4 select-none rounded-md"
+				class="bg-primary-dark py-3 w-full cursor-pointer text-center text-white text-xl my-4 select-none rounded-md"
 				onClick={() => setIsCalendarShown(!isCalendarShown())}
 			>
 				{isCalendarShown() ? "Sembunyikan" : "Tampilkan"} Kalender
 			</div>
 			<Show when={isCalendarShown()}>
-				<div class="w-full mb-12 p-4 shadow-md shadow-neutral-300 border border-neutral-300 rounded">
+				<div class="w-full p-4 shadow-md shadow-neutral-300 border border-neutral-300 rounded">
 					<div class="grid grid-cols-3 items-end justify-between space-x-4">
-						{previousMonth().getMonth() >= today.getMonth() ||
-						previousMonth().getFullYear() > today.getFullYear() ? (
-							<div
-								class="flex flex-row space-x-2 cursor-pointer px-2 select-none items-center justify-start"
-								onClick={() => updateMonth(false)}
-							>
-								<div class="text-2xl font-bold text-primary">&lt;</div>
-								<div class="text-lg text-neutral-400">
-									{monthLabels[previousMonth().getMonth()]} {previousMonth().getFullYear()}
-								</div>
+						<div
+							class="flex flex-row space-x-2 cursor-pointer px-2 select-none items-center justify-start"
+							onClick={() => updateMonth(false)}
+						>
+							<div class="text-2xl font-bold text-primary">&lt;</div>
+							<div class="text-lg text-neutral-600">
+								{monthLabels[previousMonth().getMonth()]} {previousMonth().getFullYear()}
 							</div>
-						) : (
-							<div />
-						)}
-						<div class="text-2xl font-bold text-neutral-600 text-center">
+						</div>
+
+						<div class="text-2xl font-bold text-neutral-900 text-center">
 							{monthLabels[month()]} {year()}
 						</div>
+
 						<div
 							class="flex flex-row space-x-2 cursor-pointer px-2 select-none items-center justify-end"
 							onClick={() => updateMonth(true)}
 						>
-							<div class="text-lg text-neutral-400">
+							<div class="text-lg text-neutral-600">
 								{monthLabels[nextMonth().getMonth()]} {nextMonth().getFullYear()}
 							</div>
 							<div class="text-2xl font-bold text-primary">&gt;</div>

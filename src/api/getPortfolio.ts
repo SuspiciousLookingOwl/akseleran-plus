@@ -36,7 +36,10 @@ export interface Campaign {
 	arrearsDays: number;
 	totalOutstanding: number;
 	isAutoInvestment: boolean;
+	state: CampaignState;
 }
+
+export type CampaignState = "current" | "special_mention" | "sub_standard" | "doubtful";
 
 export interface CampaignStatus {
 	name: string;
@@ -49,34 +52,39 @@ const parseDate = (str: string): Date => {
 	return new Date(parts.join(" "));
 };
 
-export const getPortfolio = async (limit = 1000): Promise<GetPortfolioOngoing> => {
-	const response = await fetch("https://core.akseleran.com/api/v3/users/portfolio/ongoing?offset=0&limit=" + limit, {
-		method: "GET",
-		headers: {
-			accept: "application/json",
-			authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-		},
-	});
+export const getPortfolio = async (limit = 1000): Promise<Campaign[]> => {
+	const accept = "application/json";
+	const authorization = `Bearer ${localStorage.getItem("auth_token")}`;
 
-	const bodyRaw = (await response.json()) as GetPortfolioOngoingRaw;
+	const base = "https://core.akseleran.com/api/v3/users/portfolio";
+	const states: CampaignState[] = ["current", "special_mention", "sub_standard", "doubtful"];
 
-	const body: GetPortfolioOngoing = {
-		...bodyRaw,
-		data: bodyRaw.data.map((d) => {
-			return {
-				investmentDate: parseDate(d.investment_date),
-				campaignName: d.campaign_name,
-				investmentAmount: d.investment_amount,
-				campaignStatus: d.campaign_status,
-				campaignUuid: d.campaign_uuid,
-				latestPayoutDate: d.latest_payout_date ? parseDate(d.latest_payout_date) : undefined,
-				nextPayoutDate: parseDate(d.next_payout_date),
-				arrearsDays: d.arrears_days,
-				totalOutstanding: d.total_outstanding,
-				isAutoInvestment: d.is_auto_investment,
-			};
-		}),
-	};
+	const responses = await Promise.all(
+		states.map(async (state) => {
+			const response = await fetch(`${base}/${state}?offset=0&limit=${limit}`, {
+				method: "GET",
+				headers: { accept, authorization },
+			});
 
-	return body;
+			const bodyRaw = (await response.json()) as GetPortfolioOngoingRaw;
+
+			return bodyRaw.data.map((d) => {
+				return {
+					investmentDate: parseDate(d.investment_date),
+					campaignName: d.campaign_name,
+					investmentAmount: d.investment_amount,
+					campaignStatus: d.campaign_status,
+					campaignUuid: d.campaign_uuid,
+					latestPayoutDate: d.latest_payout_date ? parseDate(d.latest_payout_date) : undefined,
+					nextPayoutDate: parseDate(d.next_payout_date),
+					arrearsDays: d.arrears_days,
+					totalOutstanding: d.total_outstanding,
+					isAutoInvestment: d.is_auto_investment,
+					state,
+				};
+			});
+		})
+	);
+
+	return responses.flat();
 };

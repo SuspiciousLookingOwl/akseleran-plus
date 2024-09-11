@@ -15,7 +15,16 @@ const EntryList: Component<EntryListProps> = (props) => {
 				<div
 					class={classNames([
 						"text-white text-right rounded px-[6px] py-0.5 w-full",
-						{ "bg-primary": props.active, "bg-primary-light": !props.active },
+						{
+							"bg-primary": props.active && props.campaign.state === "current",
+							"bg-primary-light": !props.active && props.campaign.state === "current",
+							"bg-yellow-500": props.active && props.campaign.state === "special_mention",
+							"bg-yellow-200": !props.active && props.campaign.state === "special_mention",
+							"bg-orange-500": props.active && props.campaign.state === "sub_standard",
+							"bg-orange-200": !props.active && props.campaign.state === "sub_standard",
+							"bg-red-500": props.active && props.campaign.state === "doubtful",
+							"bg-red-200": !props.active && props.campaign.state === "doubtful",
+						},
 					])}
 				>
 					Rp {props.campaign.investmentAmount.toLocaleString()}
