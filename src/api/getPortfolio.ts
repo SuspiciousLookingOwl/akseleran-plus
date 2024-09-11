@@ -15,6 +15,7 @@ export interface CampaignRaw {
 	next_payout_date: string;
 	arrears_days: number;
 	total_outstanding: number;
+	slug: string;
 	is_auto_investment: boolean;
 }
 
@@ -34,6 +35,7 @@ export interface Campaign {
 	latestPayoutDate?: Date;
 	nextPayoutDate: Date;
 	arrearsDays: number;
+	slug: string;
 	totalOutstanding: number;
 	isAutoInvestment: boolean;
 	state: CampaignState;
@@ -80,6 +82,7 @@ export const getPortfolio = async (limit = 1000): Promise<Campaign[]> => {
 					arrearsDays: d.arrears_days,
 					totalOutstanding: d.total_outstanding,
 					isAutoInvestment: d.is_auto_investment,
+					slug: d.slug,
 					state,
 				};
 			});
