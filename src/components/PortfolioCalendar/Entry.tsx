@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { Component, For } from "solid-js";
 import { Campaign } from "../../api/getPortfolio";
 import { isDateEqual } from "../../utils";
@@ -13,19 +12,17 @@ const EntryList: Component<EntryListProps> = (props) => {
 		<div>
 			<a href={`https://www.akseleran.co.id/portofolio/${props.campaign.slug}/${props.campaign.campaignUuid}`}>
 				<div
-					class={classNames([
-						"text-white text-right rounded px-[6px] py-0.5 w-full",
-						{
-							"bg-primary": props.active && props.campaign.state === "current",
-							"bg-primary-light": !props.active && props.campaign.state === "current",
-							"bg-yellow-500": props.active && props.campaign.state === "special_mention",
-							"bg-yellow-200": !props.active && props.campaign.state === "special_mention",
-							"bg-orange-500": props.active && props.campaign.state === "sub_standard",
-							"bg-orange-200": !props.active && props.campaign.state === "sub_standard",
-							"bg-red-500": props.active && props.campaign.state === "doubtful",
-							"bg-red-200": !props.active && props.campaign.state === "doubtful",
-						},
-					])}
+					class="text-white text-right rounded px-[6px] py-0.5 w-full"
+					classList={{
+						"bg-primary": props.active && props.campaign.state === "current",
+						"bg-primary-light": !props.active && props.campaign.state === "current",
+						"bg-yellow-500": props.active && props.campaign.state === "special_mention",
+						"bg-yellow-200": !props.active && props.campaign.state === "special_mention",
+						"bg-orange-500": props.active && props.campaign.state === "sub_standard",
+						"bg-orange-200": !props.active && props.campaign.state === "sub_standard",
+						"bg-red-500": props.active && props.campaign.state === "doubtful",
+						"bg-red-200": !props.active && props.campaign.state === "doubtful",
+					}}
 				>
 					Rp {props.campaign.investmentAmount.toLocaleString()}
 				</div>
@@ -50,17 +47,15 @@ export const Entry: Component<Props> = (props) => {
 
 	return (
 		<div
-			class={classNames([
-				"flex flex-col p-1 border min-h-[64px] max-h-[168px] -ml-[1px] -mt-[1px]",
-				{
-					"border-2 border-primary-dark z-10 rounded": isDateEqual(props.entry.date, today),
-				},
-			])}
+			class="flex flex-col p-1 border min-h-[64px] max-h-[168px] -ml-[1px] -mt-[1px]"
+			classList={{
+				"border-2 border-primary-dark z-10 rounded": isDateEqual(props.entry.date, today),
+			}}
 		>
 			<div class="flex flex-row justify-between items-center">
-				<div class={classNames({ "text-neutral-300": !props.active })}>{props.entry.date.getDate()}</div>
+				<div classList={{ "text-neutral-300": !props.active }}>{props.entry.date.getDate()}</div>
 				{props.entry.amount && (
-					<div class={classNames(["font-semibold text-lg"], { "text-neutral-400": !props.active })}>
+					<div class="font-semibold text-lg" classList={{ "text-neutral-400": !props.active }}>
 						Rp {props.entry.amount.toLocaleString()}
 					</div>
 				)}
