@@ -8,14 +8,18 @@ export interface GetPortfolioOngoingRaw {
 export interface CampaignRaw {
 	investment_date: string;
 	campaign_name: string;
+	user_id: number;
+	campaign_id: number;
+	slug: string;
+	campaign_group: null;
 	investment_amount: number;
 	campaign_status: CampaignStatus;
+	campaign_loan_quality_status: string;
 	campaign_uuid: string;
-	latest_payout_date?: string;
+	latest_payout_date: string;
 	next_payout_date: string;
 	arrears_days: number;
 	total_outstanding: number;
-	slug: string;
 	is_auto_investment: boolean;
 }
 
