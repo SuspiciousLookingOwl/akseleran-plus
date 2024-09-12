@@ -10,7 +10,9 @@ type EntryListProps = {
 const EntryList: Component<EntryListProps> = (props) => {
 	return (
 		<div>
-			<a href={`https://www.akseleran.co.id/portofolio/${props.campaign.slug}/${props.campaign.campaignUuid}`}>
+			<a
+				href={`https://www.akseleran.co.id/portofolio/pendanaan/${props.campaign.slug}/${props.campaign.campaignUuid}/${props.campaign.campaignId}/${props.campaign.userId}`}
+			>
 				<div
 					class="text-white text-right rounded px-[6px] py-0.5 w-full"
 					classList={{

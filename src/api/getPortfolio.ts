@@ -33,13 +33,17 @@ export interface GetPortfolioOngoing {
 export interface Campaign {
 	investmentDate: Date;
 	campaignName: string;
+	userId: number;
+	campaignId: number;
+	slug: string;
+	campaignGroup: null;
 	investmentAmount: number;
 	campaignStatus: CampaignStatus;
+	campaignLoanQualityStatus: string;
 	campaignUuid: string;
-	latestPayoutDate?: Date;
+	latestPayoutDate: Date;
 	nextPayoutDate: Date;
 	arrearsDays: number;
-	slug: string;
 	totalOutstanding: number;
 	isAutoInvestment: boolean;
 	state: CampaignState;
@@ -75,18 +79,22 @@ export const getPortfolio = async (limit = 1000): Promise<Campaign[]> => {
 			const bodyRaw = (await response.json()) as GetPortfolioOngoingRaw;
 
 			return bodyRaw.data.map((d) => {
-				return {
+				return <Campaign>{
 					investmentDate: parseDate(d.investment_date),
 					campaignName: d.campaign_name,
+					userId: d.user_id,
+					campaignId: d.campaign_id,
+					slug: d.slug,
+					campaignGroup: d.campaign_group,
 					investmentAmount: d.investment_amount,
 					campaignStatus: d.campaign_status,
+					campaignLoanQualityStatus: d.campaign_loan_quality_status,
 					campaignUuid: d.campaign_uuid,
 					latestPayoutDate: d.latest_payout_date ? parseDate(d.latest_payout_date) : undefined,
 					nextPayoutDate: parseDate(d.next_payout_date),
 					arrearsDays: d.arrears_days,
 					totalOutstanding: d.total_outstanding,
 					isAutoInvestment: d.is_auto_investment,
-					slug: d.slug,
 					state,
 				};
 			});
